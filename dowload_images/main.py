@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-GOOGLE_IMAGE = 'https://www.google.com/search?site=&tbm=isch&source=hp&biw=1873&bih=990&'
+google_image = 'https://www.google.com/search?site=&tbm=isch&source=hp&biw=1873&bih=990&'
 
 SAVE_FOLDER= "images"
 
@@ -21,18 +21,30 @@ usr_agent = {
     'Connection': 'keep-alive',
 }
 
-def download_images():
-    data= input('What are you looking for in Google?')
-    n_images= int(input('How many images do you want?'))
-    print('Start searching...')
-    search_url= GOOGLE_IMAGE + 'q=' + data
-    print(search_url)
-
-
 def main():
     if not os.path.exists(SAVE_FOLDER):
         os.mkdir(SAVE_FOLDER)
     download_images()
+
+def download_images():
+    data = input('What are you looking for? ')
+    n_images = int(input('How many images do you want download? '))
+
+    print('Start searching...')
+    searchurl = google_image + 'q=' + data
+    response = requests.get(searchurl, headers=usr_agent)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    results = soup.findAll('img', {'class': 'rg_i Q4LuWd'}, limit=n_images)
+    print(results)
+
+
+    
+
+
+
+
+
+
 
 
 
