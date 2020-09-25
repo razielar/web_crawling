@@ -39,15 +39,12 @@ def download_images():
     html= response.text
     soup = BeautifulSoup(html, 'html.parser')
     results = soup.findAll('img', {'class': 'rg_i Q4LuWd'})
-    
-
-    # gathering requested number of list of image links with data-src attribute
-    # continue the loop in case query fails for non-data-src attributes
+        
     count = 0
     links = []
-    for res in results:
+    for i in results:
         try:
-            link = res['data-src']
+            link = i['data-src'] #data-src structure
             links.append(link)
             count += 1
             if (count >= n_images): break
@@ -55,16 +52,19 @@ def download_images():
         except KeyError:
             continue
 
-    print("Dowloading: {0} images".format(len(links)))
+    print("Dowloading {0} images:".format(len(links)))
     
-    # Access the data URI and download the image to a file
+    for i,j in enumerate(links):
+        print("{0}: {1}".format(i+1, j))
+
+"""     
     for i, link in enumerate(links):
         response = requests.get(link)
 
         image_name = SAVE_FOLDER + '/' + data + str(i + 1) + '.jpg'
         with open(image_name, 'wb') as fh:
             fh.write(response.content)
-
+ """
 
 
 
