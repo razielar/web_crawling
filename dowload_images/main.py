@@ -1,3 +1,5 @@
+### Dowload images programatically
+
 import os
 import json
 import requests
@@ -27,28 +29,45 @@ def main():
     download_images()
 
 def download_images():
-    data = input('What are you looking for? ')
-    n_images = int(input('How many images do you want download? '))
+    data= input('What are you looking for in Google? ')
+    n_images= int(input('How many images do you want download? '))
 
     print('Start searching...')
-    searchurl = google_image + 'q=' + data
-    response = requests.get(searchurl, headers=usr_agent)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    results = soup.findAll('img', {'class': 'rg_i Q4LuWd'}, limit=n_images)
-    print(results)
-
-
+    searchurl= google_image + 'q=' + data
+    print(searchurl)
+    response= requests.get(searchurl, headers=usr_agent) #without headers crash
+    html= response.text
+    soup = BeautifulSoup(html, 'html.parser')
+    results = soup.findAll('img', {'class': 'rg_i Q4LuWd'})
     
 
+    # gathering requested number of list of image links with data-src attribute
+    # continue the loop in case query fails for non-data-src attributes
+    count = 0
+    links = []
+    for res in results:
+        try:
+            link = res['data-src']
+            links.append(link)
+            count += 1
+            if (count >= n_images): break
 
+        except KeyError:
+            continue
 
+    print("Dowloading: {0} images".format(len(links)))
+    
+    # Access the data URI and download the image to a file
+    for i, link in enumerate(links):
+        response = requests.get(link)
 
-
-
-
+        image_name = SAVE_FOLDER + '/' + data + str(i + 1) + '.jpg'
+        with open(image_name, 'wb') as fh:
+            fh.write(response.content)
 
 
 
 
 if __name__ == "__main__":
     main()
+
