@@ -1,7 +1,6 @@
 ### Dowload images programatically
 ### Sep 25th 2020
 import os
-import json
 import requests
 from bs4 import BeautifulSoup
 
@@ -53,8 +52,8 @@ def download_images():
 
     print("Dowloading {0} images:".format(len(links)))
 
-    for i,j in enumerate(links):
-        print("{0}: {1}".format(i+1, j))
+    #for i,j in enumerate(links):
+        #print("{0}: {1}".format(i+1, j))
     
     print("Start dowloading...")
 
