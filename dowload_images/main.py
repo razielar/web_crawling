@@ -1,5 +1,5 @@
 ### Dowload images programatically
-
+### Sep 25th 2020
 import os
 import json
 import requests
@@ -34,17 +34,16 @@ def download_images():
 
     print('Start searching...')
     searchurl= google_image + 'q=' + data
-    print(searchurl)
     response= requests.get(searchurl, headers=usr_agent) #without headers crash
     html= response.text
     soup = BeautifulSoup(html, 'html.parser')
     results = soup.findAll('img', {'class': 'rg_i Q4LuWd'})
         
-    count = 0
-    links = []
+    count= 0
+    links= []
     for i in results:
         try:
-            link = i['data-src'] #data-src structure
+            link= i['data-src'] #data-src structure
             links.append(link)
             count += 1
             if (count >= n_images): break
@@ -53,20 +52,19 @@ def download_images():
             continue
 
     print("Dowloading {0} images:".format(len(links)))
-    
+
     for i,j in enumerate(links):
         print("{0}: {1}".format(i+1, j))
+    
+    print("Start dowloading...")
 
-"""     
-    for i, link in enumerate(links):
-        response = requests.get(link)
+    for i,j in enumerate(links):
+        response= requests.get(j)
+        imagename= SAVE_FOLDER + '/' + data + str(i+1) + '.jpg'
+        with open(imagename, 'wb') as file:
+            file.write(response.content)
 
-        image_name = SAVE_FOLDER + '/' + data + str(i + 1) + '.jpg'
-        with open(image_name, 'wb') as fh:
-            fh.write(response.content)
- """
-
-
+    print("Done")
 
 if __name__ == "__main__":
     main()
