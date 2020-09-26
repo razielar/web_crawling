@@ -36,7 +36,26 @@ class YTstats():
         url= f'https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=id&order=date'
         if limit is not None and isinstance(limit, int):
             url += "&maxResults=" + str(limit)
-        print(url)
+        # print(url)
+
+    def _get_channel_videos_per_page(self, url):
+        json_url= requests.get(url)
+        data= json.loads(json_url.text) #json.loads from a str 
+        channel_videos= dict()
+        if 'items' is not data:
+            return channel_videos, None
+        item_data= data["items"]
+        nextPageToken= data.get("nextPageToken", None) #if doesn't find 'nextPageToken will return None'
+        for item in item_data: #item_data is a list 
+            try:
+                kind= item['id']['kind']
+                if kind == "youtube#video":
+                    video_id= item['id']['videoId']
+                    channel_videos[video_id]= dict()
+            except KeyError:
+                print("There is not id/kind")
+        
+        return channel_videos, nextPageToken
 
     
     def dump(self):
