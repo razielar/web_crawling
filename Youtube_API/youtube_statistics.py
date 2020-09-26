@@ -7,6 +7,7 @@ class YTstats():
         self.api_key= api_key
         self.channel_id= channel_id
         self.channel_statistics= None
+        self.vide_data= None 
 
     def get_channel_statistics(self):
         url= f'https://www.googleapis.com/youtube/v3/channels?part=statistics&id={self.channel_id}&key={self.api_key}'
@@ -24,6 +25,20 @@ class YTstats():
         
         return data
 
+    def get_channel_video_data(self):
+        # 1) Get all the video IDs 
+        channel_videos= self._get_channel_videos(limit= 50)
+
+
+        # 2) statistics per video
+
+    def _get_channel_videos(self, limit= None):
+        url= f'https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=id&order=date'
+        if limit is not None and isinstance(limit, int):
+            url += "&maxResults=" + str(limit)
+        print(url)
+
+    
     def dump(self):
         if self.channel_statistics is None:
             return
