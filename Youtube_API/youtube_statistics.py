@@ -40,7 +40,7 @@ class YTstats():
     def _get_channel_videos(self, limit= None):
         """
         This method allows you to read all videos until 10 pages.
-        You cna check until 10 pages which means until 500 videos, it's the limit of the YouTube API
+        You can check until 10 pages which means until 500 videos, it's the limit of the YouTube API
         """
         url= f'https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=id&order=date'
         if limit is not None and isinstance(limit, int):
