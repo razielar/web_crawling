@@ -1,0 +1,35 @@
+{
+  "kind": "youtube#searchListResponse",
+  "etag": "jDBX4LNjPHT_aV2276RtwPcYA5I",
+  "regionCode": "ES",
+  "pageInfo": {
+    "totalResults": 3,
+    "resultsPerPage": 50
+  },
+  "items": [
+    {
+      "kind": "youtube#searchResult",
+      "etag": "KCeP2iKgVhi6BiabZhSHhoXrV88",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "OJaoPO7xh2g"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "pn0axpHdfBbYey9HUXr-NrnZEHs",
+      "id": {
+        "kind": "youtube#video",
+        "videoId": "TK3NVHXLZ2k"
+      }
+    },
+    {
+      "kind": "youtube#searchResult",
+      "etag": "CbS-huaDhjIJvuT3d1EfFPTQ8JQ",
+      "id": {
+        "kind": "youtube#channel",
+        "channelId": "UCxydN2vjLEoE44RJDJHyDCA"
+      }
+    }
+  ]
+}
