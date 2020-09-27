@@ -28,7 +28,7 @@ class YTstats():
     def get_channel_video_data(self):
         # 1) Get all the video IDs 
         channel_videos= self._get_channel_videos(limit= 50)
-        print(channel_videos)
+        print(len(channel_videos))
 
         # Fancy printing: 
         # count= 0

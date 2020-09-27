@@ -1,4 +1,7 @@
 *.jpg
 __pycache__
 *~
+Youtube_API/main.py
+Youtube_API/vanessa_vega.json
+
 
