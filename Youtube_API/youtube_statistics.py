@@ -28,12 +28,13 @@ class YTstats():
     def get_channel_video_data(self):
         # 1) Get all the video IDs 
         channel_videos= self._get_channel_videos(limit= 50)
-        
-        # print(channel_videos)
-        count= 0
-        for i,j in channel_videos.items():
-            count += 1
-            print("{0}: {1}".format(count, i))
+        print(channel_videos)
+
+        # Fancy printing: 
+        # count= 0
+        # for i,j in channel_videos.items():
+        #     count += 1
+        #     print("{0}: {1}".format(count, i))
 
         # 2) statistics per video
 
@@ -61,18 +62,18 @@ class YTstats():
     def _get_channel_videos_per_page(self, url):
         """
         This method reads all youtube#video per page which are 50 video per page
+        Returns an empty dict and None for TokenPage if there's not items inside data. This could be if you exceed your API quota
         """
         json_url= requests.get(url)
         data= json.loads(json_url.text) #json.loads from a str
-        item_data= data['items']
-            # if isinstance(item_data, list):
-            #     return item_data
-            # else: 
-            #     return None
-                        
-        nextPageToken= data.get("nextPageToken", None) #if doesn't find 'nextPageToken will return None'
-            
         channel_videos= dict()
+
+        if 'items' is not data:
+            print("There's not items insde data: API exceed quota")
+            return channel_videos, None
+
+        item_data= data['items']
+        nextPageToken= data.get("nextPageToken", None) #No Token then None
         for i in item_data: #item_data is a list 
             try:
                 kind= i['id']['kind']
@@ -83,7 +84,6 @@ class YTstats():
                 print("There is not id/kind")
             
         return channel_videos, nextPageToken
-
     
     def dump(self):
         if self.channel_statistics is None:
@@ -95,5 +95,3 @@ class YTstats():
             json.dump(self.channel_statistics, f, indent=4)
         
         print('File dumped')
-
-
