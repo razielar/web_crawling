@@ -28,51 +28,61 @@ class YTstats():
     def get_channel_video_data(self):
         # 1) Get all the video IDs 
         channel_videos= self._get_channel_videos(limit= 50)
-        #print(channel_videos)
-
+        
+        # print(channel_videos)
+        count= 0
+        for i,j in channel_videos.items():
+            count += 1
+            print("{0}: {1}".format(count, i))
 
         # 2) statistics per video
 
     def _get_channel_videos(self, limit= None):
+        """
+        This method allows you to read all videos until 10 pages.
+        You cna check until 10 pages which means until 500 videos, it's the limit of the YouTube API
+        """
         url= f'https://www.googleapis.com/youtube/v3/search?key={self.api_key}&channelId={self.channel_id}&part=id&order=date'
         if limit is not None and isinstance(limit, int):
             url += "&maxResults=" + str(limit)
-        
-        #print(url)
-        vid = self._get_channel_videos_per_page(url)
-        print(vid)
-        # vid, npt= self._get_channel_videos_per_page(url)
-        
-        #idx= 0
-        #while (npt is not None and idx < 10):
-            #nexturl= url + "&pageToken=" + npt
-            #next_vid, npt= self._get_channel_videos_per_page(url= nexturl)
-            #vid.update(next_vid)
-            #idx += 1
+                
+        vid, npt= self._get_channel_videos_per_page(url=url)
+                
+        idx= 0
+        while (npt is not None and idx < 10): #you can check until 10 pages
+            nexturl= url + "&pageToken=" + npt
+            next_vid, npt= self._get_channel_videos_per_page(url= nexturl)
+            vid.update(next_vid)
+            idx += 1
 
-        #return vid
+        return vid
  
 
     def _get_channel_videos_per_page(self, url):
-            json_url= requests.get(url)
-            data= json.loads(json_url.text) #json.loads from a str 
-            # if 'items' is not data:
-            #     return channel_videos, None 
+        """
+        This method reads all youtube#video per page which are 50 video pero page
+        """
+        json_url= requests.get(url)
+        data= json.loads(json_url.text) #json.loads from a str
+        item_data= data['items']
+            # if isinstance(item_data, list):
+            #     return item_data
+            # else: 
+            #     return None
+                        
+        nextPageToken= data.get("nextPageToken", None) #if doesn't find 'nextPageToken will return None'
             
-            item_data= data["items"]
-            nextPageToken= data.get("nextPageToken", None) #if doesn't find 'nextPageToken will return None'
+        channel_videos= dict()
+        for i in item_data: #item_data is a list 
+            try:
+                kind= i['id']['kind']
+                if kind == "youtube#video":
+                    video_id= i['id']['videoId']
+                    channel_videos[video_id]= dict()
+            except KeyError:
+                print("There is not id/kind")
             
-            channel_videos= dict()
-            for i in item_data: #item_data is a list 
-                try:
-                    kind= i['id']['kind']
-                    if kind == "youtube#video":
-                        video_id= i['id']['videoId']
-                        channel_videos[video_id]= dict()
-                except KeyError:
-                    print("There is not id/kind")
-            
-            return channel_videos, nextPageToken
+        return channel_videos, nextPageToken
 
     
     def dump(self):
