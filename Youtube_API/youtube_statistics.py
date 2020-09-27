@@ -60,7 +60,7 @@ class YTstats():
 
     def _get_channel_videos_per_page(self, url):
         """
-        This method reads all youtube#video per page which are 50 video pero page
+        This method reads all youtube#video per page which are 50 video per page
         """
         json_url= requests.get(url)
         data= json.loads(json_url.text) #json.loads from a str
